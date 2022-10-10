@@ -1,3 +1,51 @@
 #root {
   color: red;
 }
+
+body {
+  margin: 0;
+}
+
+.episodeContainer {
+  width: 250px;
+  height: 380px;
+  margin: 10px;
+  background-color: gray;
+  border-radius: 5px;
+  float: left;
+}
+
+.seriesContainer {
+  padding: 20px;
+  width: 100%;
+  height: auto;
+
+
+}
+
+p {
+  margin: 0;
+
+
+}
+
+.seriesTittle {
+  text-align: center;
+  padding: 15px;
+  border-radius: 5px;
+  border-style: solid;
+  border-color: black;
+}
+
+.seriesImage {
+  display: flex;
+  margin: 15px auto;
+  width: 180px;
+  height: 120px;
+}
+
+.seriesDetails {
+  padding: 0 20px;
+  height: 43%;
+  overflow-x: hidden;
+}

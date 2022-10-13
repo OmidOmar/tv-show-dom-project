@@ -7,15 +7,22 @@
   <title>TV Show Project | Omid (OmidOmar)</title>
   <link href="style.css" rel="stylesheet" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-  <div id="root">
-
+  <div class="search">
+    <input type="text" class="input" placeholder="Search..." id="search">
+    <button class="button" onclick="searchEpisodes()" id="btnSearch">
+      <i class="fa fa-search"></i>
+    </button>
   </div>
-  <div>
+  <div id="select-episodes">
+    <p>O R</p>
     <select name="episodesList" id="episodesList"></select>
-    <input type="text" id="search"> Displaying: <span id="result"></span> Episodes.
+  </div>
+  <div id="main">
+    <p>D i s p l a y i n g : <span id="result"></span> E p i s o d e s.</p>
   </div>
   <!-- <div class="seriesContainer">
     <div class="episodeContainer">

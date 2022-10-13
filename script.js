@@ -14,10 +14,14 @@ window.onload = setup;
 //add main div
 let seriesContainer = document.createElement("div");
 seriesContainer.className = "seriesContainer";
-document.body.appendChild(seriesContainer);
+document.getElementById("main").appendChild(seriesContainer);
 
 //add select input along its options
+
 let episodesList = document.getElementById("episodesList");
+let optOne = document.createElement("option");
+optOne.innerText = "~ All Episodes ~";
+episodesList.appendChild(optOne);
 for (let episode of allEpisodes) {
   let option = document.createElement("option");
   option.id = episode.id;
@@ -28,7 +32,11 @@ for (let episode of allEpisodes) {
 }
 episodesList.addEventListener("change", (e) => {
   let selectedOption = episodesList.options[episodesList.selectedIndex].id;
-  let res = allEpisodes.filter((x) => x.id == selectedOption);
+  let res;
+  !selectedOption
+    ? (res = allEpisodes)
+    : (res = allEpisodes.filter((x) => x.id == selectedOption));
+
   displayAllEpisodes(res);
 });
 
@@ -38,30 +46,29 @@ const displayAllEpisodes = (allEpisodes) => {
   for (let i = 0; i < allEpisodes.length; i++) {
     let episodeContainer = document.createElement("div");
     episodeContainer.className = "episodeContainer";
-    let seriesTittle = document.createElement("p");
-    seriesTittle.className = "seriesTittle";
-    seriesTittle.innerText = `${allEpisodes[i]["name"]} - S${(
+    let episodesTittle = document.createElement("p");
+    episodesTittle.className = "episodesTittle";
+    episodesTittle.innerText = `${allEpisodes[i]["name"]} - S${(
       "0" + allEpisodes[i]["season"]
     ).slice(-2)}E${("0" + allEpisodes[i]["number"]).slice(-2)}`;
-    let seriesImage = document.createElement("img");
-    seriesImage.className = "seriesImage";
-    seriesImage.src = allEpisodes[i]["image"]["medium"];
-    let seriesDetails = document.createElement("div");
-    seriesDetails.className = "seriesDetails";
-    seriesDetails.innerHTML = allEpisodes[i]["summary"];
+    let episodesImage = document.createElement("img");
+    episodesImage.className = "episodesImage";
+    episodesImage.src = allEpisodes[i]["image"]["medium"];
+    let episodesDetails = document.createElement("div");
+    episodesDetails.className = "episodesDetails";
+    episodesDetails.innerHTML = allEpisodes[i]["summary"];
 
-    episodeContainer.appendChild(seriesTittle);
-    episodeContainer.appendChild(seriesImage);
-    episodeContainer.appendChild(seriesDetails);
+    episodeContainer.appendChild(episodesTittle);
+    episodeContainer.appendChild(episodesImage);
+    episodeContainer.appendChild(episodesDetails);
     seriesContainer.appendChild(episodeContainer);
   }
-  document.getElementById("result").innerText = `${allEpisodes.length}/${
+  document.getElementById("result").innerText = ` ${allEpisodes.length} / ${
     getAllEpisodes().length
-  }`;
+  } `;
 };
 
-var input = document.getElementById("search");
-input.addEventListener("keydown", function (event) {
+const searchEpisodes = () => {
   let input = document.getElementById("search").value;
   let filteredEpisodes = allEpisodes.filter((x) => {
     if (
@@ -71,6 +78,6 @@ input.addEventListener("keydown", function (event) {
       return x;
   });
   displayAllEpisodes(filteredEpisodes);
-});
-
-
+};
+var input = document.getElementById("search");
+input.addEventListener("keydown", searchEpisodes);

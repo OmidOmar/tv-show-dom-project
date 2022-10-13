@@ -41,6 +41,7 @@ body {
 #select-episodes {
   font-size: 30px;
 }
+
 .seriesContainer {
   display: flex;
   flex-wrap: wrap;
@@ -156,4 +157,3 @@ p {
     background-color: #308c9b;
   }
 }
-

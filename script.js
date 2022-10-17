@@ -1,17 +1,17 @@
+////////////////////////////////////////////////////////////////
 //You can edit ALL of the code here
-const allEpisodes = getAllEpisodes();
-function setup() {
-  //makePageForEpisodes(allEpisodes);
-  displayAllEpisodes(allEpisodes);
-}
+//const allEpisodes = getAllEpisodes();
+let len;
 
-function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+function setup(cb) {
+  //displayAllEpisodes(allEpisodes);
+  fetch("https://api.tvmaze.com/shows/82/episodes")
+    .then((response) => response.json())
+    .then((data) => cb(data))
+    .catch((error) => console.error(error));
 }
-
-window.onload = setup;
-//add main div
+window.onload = setup((data) => displayAllEpisodes(data, data.length));
+//add seriesContainer div
 let seriesContainer = document.createElement("div");
 seriesContainer.className = "seriesContainer";
 document.getElementById("main").appendChild(seriesContainer);
@@ -22,26 +22,31 @@ let episodesList = document.getElementById("episodesList");
 let optOne = document.createElement("option");
 optOne.innerText = "~ All Episodes ~";
 episodesList.appendChild(optOne);
-for (let episode of allEpisodes) {
-  let option = document.createElement("option");
-  option.id = episode.id;
-  option.innerText = `S${("0" + episode.season).slice(-2)}E${(
-    "0" + episode.number
-  ).slice(-2)} - ${episode.name}`;
-  episodesList.appendChild(option);
-}
+setup((allEpisodes) => {
+  for (let episode of allEpisodes) {
+    let option = document.createElement("option");
+    option.id = episode.id;
+    option.innerText = `S${("0" + episode.season).slice(-2)}E${(
+      "0" + episode.number
+    ).slice(-2)} - ${episode.name}`;
+    episodesList.appendChild(option);
+  }
+});
 episodesList.addEventListener("change", (e) => {
   let selectedOption = episodesList.options[episodesList.selectedIndex].id;
   let res;
-  !selectedOption
-    ? (res = allEpisodes)
-    : (res = allEpisodes.filter((x) => x.id == selectedOption));
 
-  displayAllEpisodes(res);
+  setup((allEpisodes) => {
+    len = allEpisodes.length;
+    !selectedOption
+      ? (res = allEpisodes)
+      : (res = allEpisodes.filter((x) => x.id == selectedOption));
+    displayAllEpisodes(res, len);
+  });
 });
 
 //Display all episodes
-const displayAllEpisodes = (allEpisodes) => {
+const displayAllEpisodes = (allEpisodes, len) => {
   seriesContainer.innerHTML = "";
   for (let i = 0; i < allEpisodes.length; i++) {
     let episodeContainer = document.createElement("div");
@@ -58,26 +63,26 @@ const displayAllEpisodes = (allEpisodes) => {
     episodesDetails.className = "episodesDetails";
     episodesDetails.innerHTML = allEpisodes[i]["summary"];
 
-    episodeContainer.appendChild(episodesTittle);
-    episodeContainer.appendChild(episodesImage);
-    episodeContainer.appendChild(episodesDetails);
+    episodeContainer.append(episodesTittle, episodesImage, episodesDetails);
     seriesContainer.appendChild(episodeContainer);
   }
-  document.getElementById("result").innerText = ` ${allEpisodes.length} / ${
-    getAllEpisodes().length
-  } `;
+  document.getElementById(
+    "result"
+  ).innerText = ` ${allEpisodes.length} / ${len}  `;
 };
 
+let input = document.getElementById("search");
 const searchEpisodes = () => {
-  let input = document.getElementById("search").value;
-  let filteredEpisodes = allEpisodes.filter((x) => {
-    if (
-      x.name.toLowerCase().indexOf(input.toLowerCase()) > -1 ||
-      x.summary.toLowerCase().indexOf(input.toLowerCase()) > -1
-    )
-      return x;
+  setup((allEpisodes) => {
+    len = allEpisodes.length;
+    let filteredEpisodes = allEpisodes.filter((x) => {
+      if (
+        x.name.toLowerCase().indexOf(input.value.toLowerCase()) > -1 ||
+        x.summary.toLowerCase().indexOf(input.value.toLowerCase()) > -1
+      )
+        return x;
+    });
+    displayAllEpisodes(filteredEpisodes, len);
   });
-  displayAllEpisodes(filteredEpisodes);
 };
-var input = document.getElementById("search");
 input.addEventListener("keydown", searchEpisodes);

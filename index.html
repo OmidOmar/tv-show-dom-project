@@ -11,44 +11,45 @@
 </head>
 
 <body>
-  <div class="search">
-    <input type="text" class="input" placeholder="Search..." id="search">
-    <button class="button" onclick="searchEpisodes()" id="btnSearch">
-      <i class="fa fa-search"></i>
-    </button>
-  </div>
-  <div id="select-episodes">
-    <p>O R</p>
-    <select name="episodesList" id="episodesList"></select>
-  </div>
   <div id="main">
-    <p>D i s p l a y i n g : <span id="result"></span> E p i s o d e s.</p>
-  </div>
-  <!-- <div class="seriesContainer">
-    <div class="episodeContainer">
-      <div class="seriesTittle">
-        this is title
-      </div>
-      <div class="seriesImage">
-        <img src="http://static.tvmaze.com/uploads/images/medium_landscape/1/2668.jpg" alt="">
-      </div>
-      <div class="seriesDetails">
-        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nihil veniam culpa ea deleniti voluptatum labore
-          exercitationem dolorem dolore eligendi, commodi itaque repudiandae atque suscipit quam tenetur ipsam iste in
-          quos.</p>
-
-      </div>
+    <div class="select-episodes">
+      <select class="episodesList" id="select-show">
+      </select>
+      <select class="episodesList" id="episodeList">
+        <option>~ Select Episodes ~</option>
+      </select>
+      <p>O R</p>
     </div>
-  </div> -->
+    <div class="search">
+      <input type="text" class="input" placeholder="Search..." id="search">
+      <button class="button" onclick="searchEpisodes()" id="btnSearch">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+    <div id="res">
+      <p>D i s p l a y i n g : <span id="result"></span> E p i s o d e s.</p>
+    </div>
+  </div>
+  <div id="show">
 
+    <div id="title">
+      <div id="btn-close"><button onclick="closeShowWindow()">X</button></div>
+      <h1>Title</h1>
+
+    </div>
+    <div id="details">
+
+    </div>
+  </div>
+  <footer>
+    This website images and contents is used here for strictly educational purposes.
+  </footer>
   <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
   <script src="episodes.js"></script>
 
   <!-- Loads YOUR javascript code -->
   <script src="script.js"></script>
-  <footer>
-    This website images and contents is used here for strictly educational purposes.
-  </footer>
+
 </body>
 
 </html>

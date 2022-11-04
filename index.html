@@ -11,23 +11,61 @@
 </head>
 
 <body>
-  <div id="main">
-    <div class="select-episodes">
-      <select class="episodesList" id="select-show">
-      </select>
-      <select class="episodesList" id="episodeList">
-        <option>~ Select Episodes ~</option>
-      </select>
-      <p>O R</p>
+  <div>
+    <div id="header">
+      <span id="reload" onClick="window.location.reload()">&#x21bb;</span>
+      <input type="text" id="search" placeholder="Search...">
+      <div>
+        <p>Showing Result: <span id="total"></span></p>
+      </div>
     </div>
-    <div class="search">
-      <input type="text" class="input" placeholder="Search..." id="search">
-      <button class="button" onclick="searchEpisodes()" id="btnSearch">
-        <i class="fa fa-search"></i>
-      </button>
+    <div id="control">
+
+
+      <select id="shows-list"></select>
+
+
+
+      <select id="episodes-list"></select>
+
     </div>
-    <div id="res">
-      <p>D i s p l a y i n g : <span id="result"></span> E p i s o d e s.</p>
+    <div id="main">
+      <div class="show-container">
+        <h1 class="title">Heros of Dragon</h1>
+        <div class="img-show-desc-container">
+          <img src="https://static.tvmaze.com/uploads/images/medium_portrait/81/202627.jpg" alt="">
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas eum ullam odit repellendus aspernatur
+            alias, impedit quidem mollitia sequi. Consequatur dolorem fugiat beatae accusamus vero aspernatur quisquam
+            consequuntur, deserunt ipsam! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum culpa quasi
+            eius quisquam ab voluptate expedita cumque doloremque aut, facere sapiente, rerum laboriosam quae saepe.
+            Assumenda odit delectus quasi aperiam?</p>
+          <div class="show-details">
+            <p>Rated: 8</p><span class="rate"></span>
+            <p>Genres: Drama | Horror</p><span class="genr"></span>
+            <p>Status: Enabled</p><span></span>
+            <p>Runtime: 60</p>
+          </div>
+        </div>
+      </div>
+      <div class="episode-container">
+        <h1 class="title">Heros of Dragon</h1>
+        <div class="episode-img-show-desc">
+          <img src="https://static.tvmaze.com/uploads/images/medium_portrait/81/202627.jpg" alt="">
+
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas eum ullam odit repellendus aspernatur
+            alias, impedit quidem mollitia sequi. Consequatur dolorem fugiat beatae accusamus vero aspernatur quisquam
+            consequuntur, deserunt ipsam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit ab ducimus,
+            amet
+            recusandae expedita inventore rerum voluptas vel beatae est dicta doloribus ea repellendus tempora
+            distinctio eligendi
+            vitae perspiciatis nobis. Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis, consectetur
+            iusto modi
+            quis aliquam non, doloribus inventore vel asperiores magnam eos, possimus qui delectus aspernatur at! Odio
+            illum
+            exercitationem repellendus.</p>
+        </div>
+
+      </div>
     </div>
   </div>
   <div id="show">
@@ -42,14 +80,9 @@
     </div>
   </div>
   <footer>
-    This website images and contents is used here for strictly educational purposes.
+    <p>This website images and contents is used here for strictly educational purposes.</p>
   </footer>
-  <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-  <script src="episodes.js"></script>
-
-  <!-- Loads YOUR javascript code -->
   <script src="script.js"></script>
-
 </body>
 
 </html>

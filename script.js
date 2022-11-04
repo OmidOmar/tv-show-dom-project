@@ -1,169 +1,168 @@
 let allShows = "http://api.tvmaze.com/shows";
-let seriesContainer = document.createElement("div");
-let selectShow = document.getElementById("select-show");
-let selectEpisodes = document.getElementById("episodeList");
-let showWindow = document.getElementById("show");
 let main = document.getElementById("main");
-let showID;
+let selectShow = document.getElementById("shows-list");
+let selectEpisode = document.getElementById("episodes-list");
+let showWindow = document.getElementById("show");
+let control = document.getElementById("control");
+let search = document.getElementById("search");
 
-function setup(api, callBack) {
+let showID, len;
+
+const setup = (api, callBack) => {
   fetch(api)
     .then((response) => response.json())
     .then((data) => callBack(data))
     .catch((error) => console.log(error));
-}
+};
 
-// ////////////////////////////////////////////////////////////////
-// //You can edit ALL of the code here
-// //const allEpisodes = getAllEpisodes();
-// let len;
+window.onload = setup(allShows, (shows) => {
+  len = shows.length;
+  display(shows, true);
+  addItems(shows, selectShow, true);
+});
 
-// function setup(cb) {
-//   //displayAllEpisodes(allEpisodes);
-//   fetch("https://api.tvmaze.com/shows/82/episodes")
-//     .then((response) => response.json())
-//     .then((data) => cb(data))
-//     .catch((error) => console.error(error));
-// }
-// window.onload = setup((data) => displayAllEpisodes(data, data.length));
-// //add seriesContainer div
-
-seriesContainer.className = "seriesContainer";
-document.getElementById("main").appendChild(seriesContainer);
-
-const addItems = (element, allData, isShowSelected, firstOption) => {
-  let option = document.createElement("option");
-  if (firstOption != null) {
-    option.innerText = firstOption;
-    element.appendChild(option);
-  }
-
-  for (let data of sortObject(allData)) {
-    option = document.createElement("option");
-    option.id = data.id;
-    !isShowSelected
-      ? (option.innerText = data.name)
-      : (option.innerText = `S${("0" + data.season).slice(-2)}E${(
-          "0" + data.number
-        ).slice(-2)} - ${data.name}`);
-    element.appendChild(option);
+const searchEpisodes = () => {
+  if (showID) {
+    setup(allShows + `/${showID}/episodes`, (allEpisodes) => {
+      let filteredEpisodes = allEpisodes.filter((x) => {
+        if (
+          x.name.toLowerCase().indexOf(search.value.toLowerCase()) > -1 ||
+          x.summary.toLowerCase().indexOf(search.value.toLowerCase()) > -1
+        )
+          return x;
+      });
+      console.log(filteredEpisodes);
+      display(filteredEpisodes, false);
+    });
+  } else {
+    setup(allShows, (allEpisodes) => {
+      let filteredEpisodes = allEpisodes.filter((x) => {
+        if (
+          x.name.toLowerCase().indexOf(search.value.toLowerCase()) > -1 ||
+          x.summary.toLowerCase().indexOf(search.value.toLowerCase()) > -1
+        )
+          return x;
+      });
+      console.log(filteredEpisodes);
+      display(filteredEpisodes, this);
+    });
   }
 };
+search.addEventListener("input", searchEpisodes);
+
+selectEpisode.addEventListener("change", () => {
+  let episodeID = selectEpisode.options[selectEpisode.selectedIndex].id;
+  if (episodeID) {
+    setup(allShows + `/${showID}/episodes`, (episodes) => {
+      let episode = episodes.filter((x) => x.id == episodeID);
+      showWindow.style.backgroundImage = `url(${episode[0].image.original})`;
+      document.querySelector("#title h1").innerText = episode[0].name;
+      document.querySelector("#details").innerHTML = episode[0].summary;
+      showWindow.style.display = "block";
+      control.style.display = "none";
+      main.style.visibility = "hidden";
+      search.disabled = true;
+    });
+  }
+});
+
 selectShow.addEventListener("change", () => {
   showID = selectShow.options[selectShow.selectedIndex].id;
   if (showID) {
-    setup(allShows + `/${showID}/episodes`, (episodes) => {
-      selectEpisodes.innerText = "";
-      addItems(selectEpisodes, sortObject(episodes), false, "~ All Episodes ~");
-      displayAllEpisodes(sortObject(episodes), episodes.length);
+    setup(`${allShows}/${showID}/episodes`, (x) => {
+      len = x.length;
+      display(x, false);
+      selectEpisode.style.display = "flex";
+      addItems(x, selectEpisode, false);
     });
   } else {
-    setup(allShows, (show) => {
-      displayAllEpisodes(sortObject(show), show.length);
-      selectEpisodes.innerText = "";
-      let option = document.createElement("option");
-      option.innerText = "~ Select Episodes ~";
-      selectEpisodes.appendChild(option);
+    setup(allShows, (shows) => {
+      len = shows.length;
+      display(shows, true);
+      selectEpisode.style.display = "none";
+      addItems(shows, selectShow, true);
+      showID = "";
     });
   }
 });
-selectEpisodes.addEventListener("change", () => {
-  let selectedID = selectEpisodes.options[selectEpisodes.selectedIndex].id;
-  main.style.visibility = "hidden";
-  showWindow.style.display = "block";
-  setup(allShows + `/${showID}/episodes`, (episodes) => {
-    let episode = episodes.filter((x) => x.id == selectedID);
-    console.log(episode[0].image.original);
-    showWindow.style.backgroundImage = `url(${episode[0].image.original})`;
-    document.querySelector("#title h1").innerText = episode[0].name;
-    document.querySelector("#details").innerHTML = episode[0].summary;
-    console.log(episode[0]);
-  });
-});
 
-// //add select input along its options
+const addItems = (items, list, isShow) => {
+  list.innerHTML = "";
 
-// let episodesList = document.getElementById("episodesList");
-// let optOne = document.createElement("option");
-// optOne.innerText = "~ All Episodes ~";
-// episodesList.appendChild(optOne);
-// setup((allEpisodes) => {
-//   for (let episode of allEpisodes) {
-//     let option = document.createElement("option");
-//     option.id = episode.id;
-//     option.innerText = `S${("0" + episode.season).slice(-2)}E${(
-//       "0" + episode.number
-//     ).slice(-2)} - ${episode.name}`;
-//     episodesList.appendChild(option);
-//   }
-// });
-// episodesList.addEventListener("change", (e) => {
-//   let selectedOption = episodesList.options[episodesList.selectedIndex].id;
-//   let res;
-
-//   setup((allEpisodes) => {
-//     len = allEpisodes.length;
-//     !selectedOption
-//       ? (res = allEpisodes)
-//       : (res = allEpisodes.filter((x) => x.id == selectedOption));
-//     displayAllEpisodes(res, len);
-//   });
-// });
-
-//Display all episodes
-const displayAllEpisodes = (allEpisodes, len) => {
-  seriesContainer.innerHTML = "";
-  for (let i = 0; i < allEpisodes.length; i++) {
-    let episodeContainer = document.createElement("div");
-    episodeContainer.className = "episodeContainer";
-    let episodesTittle = document.createElement("p");
-    episodesTittle.className = "episodesTittle";
-    episodesTittle.innerText = `${allEpisodes[i]["name"]} - S${(
-      "0" + allEpisodes[i]["season"]
-    ).slice(-2)}E${("0" + allEpisodes[i]["number"]).slice(-2)}`;
-    let episodesImage = document.createElement("img");
-    episodesImage.className = "episodesImage";
-    if (allEpisodes[i].image)
-      episodesImage.src = allEpisodes[i]["image"]["medium"];
-    let episodesDetails = document.createElement("div");
-    episodesDetails.className = "episodesDetails";
-    episodesDetails.innerHTML = allEpisodes[i]["summary"];
-    episodeContainer.append(episodesTittle, episodesImage, episodesDetails);
-    seriesContainer.appendChild(episodeContainer);
+  if (isShow) {
+    let option = document.createElement("option");
+    option.innerText = "~ Show all Serials ~";
+    list.append(option);
+    for (let item of items) {
+      let option = document.createElement("option");
+      option.innerText = item.name;
+      option.id = item.id;
+      list.appendChild(option);
+    }
+  } else {
+    let option = document.createElement("option");
+    option.innerText = "~ Show all Episodes ~";
+    list.append(option);
+    for (let item of items) {
+      let option = document.createElement("option");
+      option.innerText = `S${("0" + item.season).slice(-2)}E${(
+        "0" + item.number
+      ).slice(-2)} - ${item.name}`;
+      option.id = item.id;
+      list.appendChild(option);
+    }
   }
-  document.getElementById(
-    "result"
-  ).innerText = ` ${allEpisodes.length} / ${len}  `;
 };
 
-// let input = document.getElementById("search");
-// const searchEpisodes = () => {
-//   setup((allEpisodes) => {
-//     len = allEpisodes.length;
-//     let filteredEpisodes = allEpisodes.filter((x) => {
-//       if (
-//         x.name.toLowerCase().indexOf(input.value.toLowerCase()) > -1 ||
-//         x.summary.toLowerCase().indexOf(input.value.toLowerCase()) > -1
-//       )
-//         return x;
-//     });
-//     displayAllEpisodes(filteredEpisodes, len);
-//   });
-// };
-// input.addEventListener("keydown", searchEpisodes);
+const display = (objects, isShow) => {
+  main.innerHTML = "";
+  for (let show of objects) {
+    let container = document.createElement("div");
+    let title = document.createElement("h4");
+    let description = document.createElement("div");
+    let details = document.createElement("div");
+    let image = document.createElement("img");
+    let summary = document.createElement("p");
+    let paragraph = document.createElement("p");
 
-const sortObject = (object) => {
-  return object.sort((a, b) =>
-    a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-  );
+    summary.innerHTML = show.summary.replace("<p>", " ").replace("</p>", " ");
+    image.src = show.image.medium;
+
+    details.className = "show-details";
+    if (isShow) {
+      title.innerText = show.name;
+      paragraph.innerHTML = `Rated: ${
+        show.rating.average
+      }<br><br>Genres: ${show.genres
+        .toString()
+        .replace(",", " | ")}<br><br>Status: ${show.status}<br><br>Runtime: ${
+        show.runtime
+      }`;
+      description.className = "img-show-desc-container"; //"episode-img-show-desc";
+      container.className = "show-container";
+    } else {
+      title.innerText = `${show.name} - S${("0" + show.season).slice(-2)}E${(
+        "0" + show.number
+      ).slice(-2)}`;
+      main.style.display = "flex";
+      main.style.flexWrap = "wrap";
+      main.style.flexDirection = "row";
+      main.style.justifyContent = "center";
+      description.className = "episode-img-show-desc";
+      container.className = "episode-container";
+    }
+    details.append(paragraph);
+    description.append(image, summary, details);
+    container.append(title, description);
+    main.append(container);
+  }
+  document.getElementById("total").innerText = `${objects.length} / ${len}`;
 };
 
 const closeShowWindow = () => {
   showWindow.style.display = "none";
   main.style.visibility = "visible";
+  control.style.display = "flex";
+  search.disabled = false;
 };
 
-window.onload = setup(allShows, (show) => {
-  addItems(selectShow, sortObject(show), false, "~ All Shows ~");
-  displayAllEpisodes(sortObject(show), show.length);
-});

@@ -17,9 +17,15 @@ const setup = (api, callBack) => {
 
 window.onload = setup(allShows, (shows) => {
   len = shows.length;
-  display(shows, true);
+  display(sortObject(shows), true);
   addItems(shows, selectShow, true);
 });
+
+const sortObject = (object) => {
+  return object.sort((a, b) =>
+    a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+  );
+};
 
 const searchEpisodes = () => {
   if (showID) {
@@ -165,4 +171,3 @@ const closeShowWindow = () => {
   control.style.display = "flex";
   search.disabled = false;
 };
-
